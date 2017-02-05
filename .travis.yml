@@ -28,8 +28,9 @@ addons:
     packages:
       - oracle-java8-installer
 
-before_install: unset SBT_OPTS JVM_OPTS
-
-before_script: travis_retry sbt "plz $TRAVIS_SCALA_VERSION update"
-
 script: ./build/run_tests.sh
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
