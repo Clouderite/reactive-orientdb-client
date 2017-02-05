@@ -15,7 +15,6 @@ branches:
   - master
 
 jdk:
-- oraclejdk7
 - oraclejdk8
 
 matrix:
@@ -28,7 +27,7 @@ addons:
     packages:
       - oracle-java8-installer
 
-script: ./build/run_tests.sh
+script: eval "sbt ++$TRAVIS_SCALA_VERSION coverage test coverageReport coverageAggregate coveralls"
 
 cache:
   directories:
