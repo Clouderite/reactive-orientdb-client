@@ -1,0 +1,35 @@
+language: scala
+
+sudo: required
+dist: trusty
+
+scala:
+- 2.11.8
+
+notifications:
+  email:
+  - dembol@devesion.com
+
+branches:
+  only:
+  - master
+
+jdk:
+- oraclejdk7
+- oraclejdk8
+
+matrix:
+  include:
+  - scala: 2.12.0
+    jdk: oraclejdk8
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
+before_install: unset SBT_OPTS JVM_OPTS
+
+before_script: travis_retry sbt "plz $TRAVIS_SCALA_VERSION update"
+
+script: ./build/run_tests.sh
