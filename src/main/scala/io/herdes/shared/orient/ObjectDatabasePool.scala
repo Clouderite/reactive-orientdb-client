@@ -5,10 +5,9 @@ import com.orientechnologies.orient.`object`.db.{OObjectDatabasePool, OObjectDat
 private[orient] object ObjectDatabasePool extends AbstractDatabasePool[OObjectDatabaseTx] {
 
   override implicit def db(implicit context: OrientContext): OObjectDatabaseTx = {
-    import context._
-    val pool = OObjectDatabasePool.global(databasePoolMin, databasePoolMax)
-    val db = pool.acquire(connectionString(context), databaseLogin, databasePassword)
-    db.getEntityManager.registerEntityClasses(entityPackageName)
+    val pool = OObjectDatabasePool.global(context.databasePoolMin, context.databasePoolMax)
+    val db = pool.acquire(connectionString(context), context.databaseLogin, context.databasePassword)
+    db.getEntityManager.registerEntityClasses(context.entityPackageName)
     db
   }
 }

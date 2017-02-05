@@ -15,7 +15,9 @@ private[orient] abstract class AbstractDatabasePool[C <: ODatabase[_]] {
   }
 
   private[orient] def connectionString(implicit context: OrientContext) = {
-    import context._
+    val databaseProtocol = context.databaseProtocol
+    val databaseHost = context.databaseHost
+    val databaseName = context.databaseName
     s"$databaseProtocol:$databaseHost/$databaseName"
   }
 }

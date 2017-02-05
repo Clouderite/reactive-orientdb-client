@@ -10,28 +10,28 @@ import org.scalatest.mockito.MockitoSugar
 import scala.util.Random
 
 class DocumentDatabasePoolTest extends FlatSpec with MustMatchers with MockitoSugar {
-  private val TestDatabaseProtocol = "protocol"
-  private val TestDatabaseHost = "host"
-  private val TestDatabaseName = "name"
-  private val TestDatabaseLogin = "login"
-  private val TestDatabasePassword = "password"
-  private val TestDatabasePoolMin = Random.nextInt(10)
-  private val TestDatabasePoolMax = TestDatabasePoolMin + Random.nextInt(10)
+  private val testDatabaseProtocol = "protocol"
+  private val testDatabaseHost = "host"
+  private val testDatabaseName = "name"
+  private val testDatabaseLogin = "login"
+  private val testDatabasePassword = "password"
+  private val testDatabasePoolMin = Random.nextInt(10)
+  private val testDatabasePoolMax = testDatabasePoolMin + Random.nextInt(10)
 
   private implicit val orientContext = mock[OrientContext]
   private implicit val poolFactory = mock[PoolFactory[ODatabaseDocumentTx]]
   private val pool = mock[ODatabasePoolBase[ODatabaseDocumentTx]]
   private val db = mock[ODatabaseDocumentTx]
 
-  when(orientContext.databaseProtocol).thenReturn(TestDatabaseProtocol)
-  when(orientContext.databaseHost).thenReturn(TestDatabaseHost)
-  when(orientContext.databaseName).thenReturn(TestDatabaseName)
-  when(orientContext.databaseLogin).thenReturn(TestDatabaseLogin)
-  when(orientContext.databasePassword).thenReturn(TestDatabasePassword)
-  when(orientContext.databasePoolMin).thenReturn(TestDatabasePoolMin)
-  when(orientContext.databasePoolMax).thenReturn(TestDatabasePoolMax)
+  when(orientContext.databaseProtocol).thenReturn(testDatabaseProtocol)
+  when(orientContext.databaseHost).thenReturn(testDatabaseHost)
+  when(orientContext.databaseName).thenReturn(testDatabaseName)
+  when(orientContext.databaseLogin).thenReturn(testDatabaseLogin)
+  when(orientContext.databasePassword).thenReturn(testDatabasePassword)
+  when(orientContext.databasePoolMin).thenReturn(testDatabasePoolMin)
+  when(orientContext.databasePoolMax).thenReturn(testDatabasePoolMax)
   when(poolFactory.apply(orientContext)).thenReturn(pool)
-  when(pool.acquire(s"$TestDatabaseProtocol:$TestDatabaseHost/$TestDatabaseName", TestDatabaseLogin, TestDatabasePassword)).thenReturn(db)
+  when(pool.acquire(s"$testDatabaseProtocol:$testDatabaseHost/$testDatabaseName", testDatabaseLogin, testDatabasePassword)).thenReturn(db)
 
   val sut = DocumentDatabasePool(poolFactory)
 

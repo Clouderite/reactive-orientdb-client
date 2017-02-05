@@ -10,13 +10,13 @@ import org.scalatest.{FlatSpec, MustMatchers}
 import scala.util.Random
 
 class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSugar {
-  private val TestEntityName = "entity name"
-  private val TestEntityId = "sample id"
-  private val TestInvalidEntityId = "sample id invalid"
-  private val TestItemCollectionMinSize = 5
-  private val TestItemCollectionSize = Random.nextInt(10) + TestItemCollectionMinSize
-  private val TestDocumentsCollection = List.fill(TestItemCollectionSize)(mock[ODocument])
-  private val TestItemsCollection = List.fill(TestItemCollectionSize)(mock[Entity[String]])
+  private val testEntityName = "entity name"
+  private val testEntityId = "sample id"
+  private val testInvalidEntityId = "sample id invalid"
+  private val testItemCollectionMinSize = 5
+  private val testItemCollectionSize = Random.nextInt(10) + testItemCollectionMinSize
+  private val testDocumentsCollection = List.fill(testItemCollectionSize)(mock[ODocument])
+  private val testItemsCollection = List.fill(testItemCollectionSize)(mock[Entity[String]])
 
   private val documentContext = mock[DocumentContext[Entity[String]]]
   private val databasePool = spy(DocumentDatabasePool())
@@ -30,7 +30,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
 
   private val orid = mock[ORID]
   when(documentContext.orientContext).thenReturn(orientContext)
-  when(documentContext.entityName).thenReturn(TestEntityName)
+  when(documentContext.entityName).thenReturn(testEntityName)
   when(documentContext.te).thenReturn(te)
   when(documentContext.td).thenReturn(td)
   doReturn(db).when(databasePool).db(orientContext)
@@ -39,9 +39,9 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
   when(te.apply(document)).thenReturn(item)
   when(td.apply(item)).thenReturn(document)
   when(document.getIdentity).thenReturn(orid)
-  when(item.id).thenReturn(TestEntityId)
-  when(sqlDb.queryBySqlParams(s"select * from $TestEntityName where id=?")(TestEntityId)).thenReturn(List(document))
-  when(sqlDb.queryBySqlParams(s"select * from $TestEntityName where id=?")(TestInvalidEntityId)).thenReturn(List())
+  when(item.id).thenReturn(testEntityId)
+  when(sqlDb.queryBySqlParams(s"select * from $testEntityName where id=?")(testEntityId)).thenReturn(List(document))
+  when(sqlDb.queryBySqlParams(s"select * from $testEntityName where id=?")(testInvalidEntityId)).thenReturn(List())
 
   val sut = new DocumentRepository()(documentContext, databasePool)
 
@@ -49,7 +49,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
     // Given
 
     // When
-    val retItem = sut.findById(TestEntityId)
+    val retItem = sut.findById(testEntityId)
 
     // Then
     retItem mustBe item
@@ -60,7 +60,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
 
     // When
     assertThrows[ObjectNotFoundException] {
-      sut.findById(TestInvalidEntityId)
+      sut.findById(testInvalidEntityId)
     }
   }
 
@@ -68,7 +68,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
     // Given
 
     // When
-    val retItem = sut.findByIdOptional(TestEntityId)
+    val retItem = sut.findByIdOptional(testEntityId)
 
     // Then
     retItem mustBe Some(item)
@@ -78,7 +78,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
     // Given
 
     // When
-    val retItem = sut.findByIdOptional(TestInvalidEntityId)
+    val retItem = sut.findByIdOptional(testInvalidEntityId)
 
     // Then
     retItem mustBe None
@@ -86,22 +86,22 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
 
   "find all" should "find and return all items" in {
     // Given
-    when(sqlDb.queryBySql(s"select * from $TestEntityName")).thenReturn(TestDocumentsCollection)
-    TestDocumentsCollection.zip(TestItemsCollection).foreach(t => when(te.apply(t._1)).thenReturn(t._2))
+    when(sqlDb.queryBySql(s"select * from $testEntityName")).thenReturn(testDocumentsCollection)
+    testDocumentsCollection.zip(testItemsCollection).foreach(t => when(te.apply(t._1)).thenReturn(t._2))
 
     // When
     val retItems = sut.findAll()
 
     // Then
-    retItems must have size TestItemCollectionSize
-    retItems mustEqual TestItemsCollection
+    retItems must have size testItemCollectionSize
+    retItems mustEqual testItemsCollection
   }
 
   "save" should "merge two documents" in {
     // Given
     val newItem = mock[Entity[String]]
     val newDocument = mock[ODocument]
-    when(newItem.id).thenReturn(TestEntityId)
+    when(newItem.id).thenReturn(testEntityId)
     when(td.apply(newItem)).thenReturn(newDocument)
 
     // When
@@ -118,7 +118,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
     val newDocument = mock[ODocument]
     val mergedDocument = mock[ODocument]
     val persistedDocument = mock[ODocument]
-    when(newItem.id).thenReturn(TestEntityId)
+    when(newItem.id).thenReturn(testEntityId)
     when(td.apply(newItem)).thenReturn(newDocument)
     when(document.merge(newDocument, true, true)).thenReturn(mergedDocument)
     when(db.save(mergedDocument)).thenReturn(persistedDocument)

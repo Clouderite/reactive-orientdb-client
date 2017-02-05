@@ -11,9 +11,8 @@ import scala.collection.JavaConverters._
 
 class DocumentDatabasePool(implicit poolFactory: PoolFactory[ODatabaseDocumentTx]) extends AbstractDatabasePool[ODatabaseDocumentTx] {
   override implicit def db(implicit context: OrientContext): ODatabaseDocumentTx = {
-    import context._
     val pool = poolFactory(context)
-    pool.acquire(connectionString(context), databaseLogin, databasePassword)
+    pool.acquire(connectionString(context), context.databaseLogin, context.databasePassword)
   }
 
   implicit def dbToSqlDatabaseSupport(db: ODatabaseDocumentTx): SqlDatabaseSupport = new SqlDatabaseSupport(db)
@@ -36,8 +35,7 @@ object DocumentDatabasePool {
 }
 
 object DocumentDatabasePoolFactory {
-  def poolFactory(orientContext: OrientContext): ODatabasePoolBase[ODatabaseDocumentTx] = {
-    import orientContext._
-    ODatabaseDocumentPool.global(databasePoolMin, databasePoolMax)
+  def poolFactory(context: OrientContext): ODatabasePoolBase[ODatabaseDocumentTx] = {
+    ODatabaseDocumentPool.global(context.databasePoolMin, context.databasePoolMax)
   }
 }
