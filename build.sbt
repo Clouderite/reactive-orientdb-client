@@ -18,6 +18,5 @@ libraryDependencies ++= {
 }
 
 fork := true
-coverageEnabled := true
 mappings in (Compile, packageBin) ++= (mappings in (Compile, packageSrc)).value
 scalacOptions ++= Seq("-Xmax-classfile-name", "110")
