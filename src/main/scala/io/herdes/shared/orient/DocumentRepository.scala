@@ -17,7 +17,7 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
 
   def findAll(): List[T] = {
     execute {
-      db => db.queryBySql(s"select * from $entityName")
+      db => db.queryBySql(s"select from $entityName")
     }
   }
 
@@ -43,7 +43,7 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
   private def findDocumentByIdOptional(id: String): Option[ODocument] = {
     execute {
       db =>
-        val list = db.queryBySqlParams(s"select * from $entityName where id=?")(id)
+        val list = db.queryBySqlParams(s"select from $entityName where id=?")(id)
         list.headOption
     }
   }

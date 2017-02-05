@@ -2,15 +2,18 @@ package io.herdes.shared.orient
 
 import com.orientechnologies.orient.core.db.{ODatabase, ODatabaseInternal, ODatabasePoolBase}
 
+import scala.util.{Failure, Success, Try}
+
 private[orient] abstract class AbstractDatabasePool[C <: ODatabase[_]] {
   implicit def db(implicit context: OrientContext): C
 
   private[orient] def execute[A](statement: (C) => A)(implicit context: OrientContext): A = {
     val currentDb = db
-    try {
-      statement(currentDb)
-    } finally {
-      currentDb.close()
+    val result = Try(statement(currentDb))
+    currentDb.close()
+    result match {
+      case Success(value) => value
+      case Failure(ex) => throw ex
     }
   }
 

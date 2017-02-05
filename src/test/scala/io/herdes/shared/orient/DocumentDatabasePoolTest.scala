@@ -1,8 +1,11 @@
 package io.herdes.shared.orient
 
+import java.security.SecureRandom
+
 import com.orientechnologies.orient.core.db.ODatabasePoolBase
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
 import io.herdes.shared.orient.AbstractDatabasePool.PoolFactory
+import io.herdes.shared.orient.TestUtils.randomInt
 import org.mockito.Mockito.when
 import org.scalatest.{FlatSpec, MustMatchers}
 import org.scalatest.mockito.MockitoSugar
@@ -15,8 +18,8 @@ class DocumentDatabasePoolTest extends FlatSpec with MustMatchers with MockitoSu
   private val testDatabaseName = "name"
   private val testDatabaseLogin = "login"
   private val testDatabasePassword = "password"
-  private val testDatabasePoolMin = Random.nextInt(10)
-  private val testDatabasePoolMax = testDatabasePoolMin + Random.nextInt(10)
+  private val testDatabasePoolMin = randomInt(10)
+  private val testDatabasePoolMax = testDatabasePoolMin + randomInt(10)
 
   private implicit val orientContext = mock[OrientContext]
   private implicit val poolFactory = mock[PoolFactory[ODatabaseDocumentTx]]

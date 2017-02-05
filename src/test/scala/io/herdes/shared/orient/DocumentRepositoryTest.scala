@@ -3,18 +3,17 @@ package io.herdes.shared.orient
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
 import com.orientechnologies.orient.core.id.ORID
 import com.orientechnologies.orient.core.record.impl.ODocument
+import io.herdes.shared.orient.TestUtils.randomInt
 import org.mockito.Mockito.{doReturn, spy, verify, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, MustMatchers}
-
-import scala.util.Random
 
 class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSugar {
   private val testEntityName = "entity name"
   private val testEntityId = "sample id"
   private val testInvalidEntityId = "sample id invalid"
   private val testItemCollectionMinSize = 5
-  private val testItemCollectionSize = Random.nextInt(10) + testItemCollectionMinSize
+  private val testItemCollectionSize = randomInt(10) + testItemCollectionMinSize
   private val testDocumentsCollection = List.fill(testItemCollectionSize)(mock[ODocument])
   private val testItemsCollection = List.fill(testItemCollectionSize)(mock[Entity[String]])
 
@@ -40,8 +39,8 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
   when(td.apply(item)).thenReturn(document)
   when(document.getIdentity).thenReturn(orid)
   when(item.id).thenReturn(testEntityId)
-  when(sqlDb.queryBySqlParams(s"select * from $testEntityName where id=?")(testEntityId)).thenReturn(List(document))
-  when(sqlDb.queryBySqlParams(s"select * from $testEntityName where id=?")(testInvalidEntityId)).thenReturn(List())
+  when(sqlDb.queryBySqlParams(s"select from $testEntityName where id=?")(testEntityId)).thenReturn(List(document))
+  when(sqlDb.queryBySqlParams(s"select from $testEntityName where id=?")(testInvalidEntityId)).thenReturn(List())
 
   val sut = new DocumentRepository()(documentContext, databasePool)
 
@@ -86,7 +85,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
 
   "find all" should "find and return all items" in {
     // Given
-    when(sqlDb.queryBySql(s"select * from $testEntityName")).thenReturn(testDocumentsCollection)
+    when(sqlDb.queryBySql(s"select from $testEntityName")).thenReturn(testDocumentsCollection)
     testDocumentsCollection.zip(testItemsCollection).foreach(t => when(te.apply(t._1)).thenReturn(t._2))
 
     // When
