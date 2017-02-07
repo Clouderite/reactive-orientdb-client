@@ -1,27 +1,31 @@
 package io.herdes.shared.orient
 
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
-import org.mockito.Mockito
-import org.mockito.Mockito.{spy, verify, when}
+import org.mockito.Mockito.{verify, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, MustMatchers}
 
-class AbstractDatabasePoolTest extends FlatSpec with MustMatchers with MockitoSugar {
+class ObjectStatementExecutorTest extends FlatSpec with MustMatchers with MockitoSugar {
   private val testStatementReturn = "return value"
-  private implicit val orientContext = mock[OrientContext]
   private val db = mock[ODatabaseDocumentTx]
   private val statement: (ODatabaseDocumentTx) => String = mock[(ODatabaseDocumentTx) => String]
+  private val poolFactory = mock[PartitionedDatabasePoolFactory]
+  private val pool = mock[OPartitionedDatabasePool]
+  private val orientContext = mock[OrientContext]
+
+  when(poolFactory(orientContext)).thenReturn(pool)
+  when(pool.acquire()).thenReturn(db)
   when(statement(db)).thenReturn(testStatementReturn)
 
-  private val sut = spy(classOf[AbstractDatabasePool[ODatabaseDocumentTx]])
-  Mockito.doReturn(db).when(sut).db
+  private val sut = ObjectStatementExecutor(orientContext, poolFactory)
 
   "execute" should "execute statement" in {
     // Given
 
     // When
     sut.execute(statement)
-    
+
     // Then
     verify(statement).apply(db)
   }

@@ -3,9 +3,8 @@ package io.herdes.shared.orient
 import com.orientechnologies.orient.core.id.ORID
 import com.orientechnologies.orient.core.record.impl.ODocument
 
-class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], pool: DocumentDatabasePool = DocumentDatabasePool()) extends Repository[T] {
+class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], executor: DocumentStatementExecutor) extends Repository[T] {
   import ec._
-  import pool._
 
   def findById(id: String): T = {
     findByIdOptional(id).getOrElse(throw new ObjectNotFoundException(id))
@@ -16,7 +15,8 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
   }
 
   def findAll(): List[T] = {
-    execute {
+    import executor.dbToSqlDatabaseSupport
+    executor.execute {
       db => db.queryBySql(s"select from $entityName")
     }
   }
@@ -35,13 +35,14 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
   }
 
   private def deleteByOrid(orid: ORID): Unit = {
-    execute {
+    executor.execute {
       db => db.delete(orid)
     }
   }
 
   private def findDocumentByIdOptional(id: String): Option[ODocument] = {
-    execute {
+    import executor.dbToSqlDatabaseSupport
+    executor.execute {
       db =>
         val list = db.queryBySqlParams(s"select from $entityName where id=?")(id)
         list.headOption
@@ -49,7 +50,7 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
   }
 
   private def persist(doc: ODocument): T = {
-    execute {
+    executor.execute {
       db =>
         val persistedDoc: ODocument = db.save(doc)
         persistedDoc
@@ -70,7 +71,15 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], p
 }
 
 object DocumentRepository {
-  def apply[T <: Entity[String]](implicit ec: DocumentContext[T]): DocumentRepository[T] = {
-    new DocumentRepository
+  def apply[T <: Entity[String]](implicit dc: DocumentContext[T]): DocumentRepository[T] = {
+    apply(dc, DocumentStatementExecutor(dc.orientContext))
+  }
+  
+  def apply[T <: Entity[String]](implicit dc: DocumentContext[T], poolFactory: PartitionedDatabasePoolFactory): DocumentRepository[T] = {
+    apply(dc, DocumentStatementExecutor(dc.orientContext, poolFactory))
+  }
+
+  def apply[T <: Entity[String]](implicit dc: DocumentContext[T], executor: DocumentStatementExecutor): DocumentRepository[T] = {
+    new DocumentRepository()(dc, executor)
   }
 }

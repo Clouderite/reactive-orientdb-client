@@ -13,8 +13,8 @@ private[orient] abstract class AbstractRepositoryActor[T <: Entity[String]](repo
     case ListItems() =>
       sender ! repository.findAll()
 
-    case SaveItem(item: T) =>
-      sender ! repository.save(item)
+    case SaveItem(item) =>
+      sender ! repository.save(item.asInstanceOf[T])
 
     case DeleteItem(id) =>
       val item = repository.findById(id)
