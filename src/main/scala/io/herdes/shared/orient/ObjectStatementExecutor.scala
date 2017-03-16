@@ -11,7 +11,9 @@ class ObjectStatementExecutor[T](context: OrientContext, poolFactory: Partitione
   private val pool = poolFactory(context)
 
   def execute[A](statement: (OObjectDatabaseTx) => A)(implicit context: ObjectContext[T]): A = {
-    val result = Try(statement(getDb(context)))
+    val db = getDb(context)
+    val result = Try(statement(db))
+    db.close()
 
     result match {
       case Success(value) => value
