@@ -11,8 +11,10 @@ class DocumentStatementExecutor(context: OrientContext, poolFactory: Partitioned
   private lazy val pool = poolFactory(context)
 
   def execute[A](statement: (ODatabaseDocumentTx) => A): A = {
-    val result = Try(statement(getDb))
-
+    val db = getDb
+    val result = Try(statement(db))
+    db.close()
+    
     result match {
       case Success(value) => value
       case Failure(ex) => throw ex
