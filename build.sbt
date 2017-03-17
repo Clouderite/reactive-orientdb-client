@@ -1,5 +1,5 @@
 organization := "com.devesion"
-name := "reactive-orient-client"
+name := "reactive-orientdb-client"
 version := "1.0"
 
 scalaVersion := "2.11.8"
