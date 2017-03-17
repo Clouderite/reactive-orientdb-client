@@ -1,5 +1,5 @@
-organization := "io.herdes.shared"
-name := "herdes-orient"
+organization := "com.devesion"
+name := "reactive-orient-client"
 version := "1.0"
 
 scalaVersion := "2.11.8"
