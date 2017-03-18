@@ -1,6 +1,7 @@
 package com.devesion.orientdb
 
 import com.devesion.orientdb.DocumentContext.{TD, TE}
+import com.devesion.orientdb.TestUtils.randomInt
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
 import com.orientechnologies.orient.core.id.ORID

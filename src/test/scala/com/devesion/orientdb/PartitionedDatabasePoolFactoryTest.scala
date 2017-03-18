@@ -1,5 +1,6 @@
 package com.devesion.orientdb
 
+import com.devesion.orientdb.TestUtils.{randomInt, randomIntGtZero}
 import org.scalatest.{FlatSpec, MustMatchers}
 
 class PartitionedDatabasePoolFactoryTest extends FlatSpec with MustMatchers {
