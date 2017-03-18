@@ -1,7 +1,7 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
+import com.devesion.orientdb.DocumentContext.{TD, TE}
 import com.orientechnologies.orient.core.record.impl.ODocument
-import io.herdes.shared.orient.DocumentContext.{TD, TE}
 
 trait DocumentContext[T] {
   implicit def te: TE[T]

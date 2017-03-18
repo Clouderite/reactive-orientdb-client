@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 import com.orientechnologies.orient.`object`.db.OObjectDatabaseTx
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx

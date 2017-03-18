@@ -1,11 +1,10 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
+import com.devesion.orientdb.DocumentContext.{TD, TE}
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
 import com.orientechnologies.orient.core.id.ORID
 import com.orientechnologies.orient.core.record.impl.ODocument
-import io.herdes.shared.orient.DocumentContext.{TD, TE}
-import io.herdes.shared.orient.TestUtils.randomInt
 import org.mockito.Mockito
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.mockito.MockitoSugar

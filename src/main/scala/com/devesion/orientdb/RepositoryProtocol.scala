@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 abstract sealed class RepositoryProtocol
 case class GetItem(id: String) extends RepositoryProtocol

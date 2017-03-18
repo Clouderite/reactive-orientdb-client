@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 class ObjectNotFoundException(id: String) extends RuntimeException {
   override def getMessage: String = {

@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 
@@ -21,7 +21,7 @@ class PartitionedDatabasePoolFactory {
     pool
   }
 
-  private[orient] def connectionString(implicit context: OrientContextCase) = {
+  private[orientdb] def connectionString(implicit context: OrientContextCase) = {
     val databaseProtocol = context.databaseProtocol
     val databaseHost = context.databaseHost
     val databaseName = context.databaseName

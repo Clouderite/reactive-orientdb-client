@@ -1,8 +1,8 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 import akka.actor.{Actor, ActorLogging}
 
-private[orient] abstract class AbstractRepositoryActor[T <: Entity[String]](repository: Repository[T]) extends Actor with ActorLogging {
+private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](repository: Repository[T]) extends Actor with ActorLogging {
   private implicit val system = context.system
   private implicit val dispatcher = system.dispatcher
 

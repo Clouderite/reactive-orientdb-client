@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], executor: ObjectStatementExecutor[T]) extends Repository[T] {
 

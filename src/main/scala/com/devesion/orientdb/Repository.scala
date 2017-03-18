@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 trait Repository[T <: Entity[String]] {
   def findById(id: String): T

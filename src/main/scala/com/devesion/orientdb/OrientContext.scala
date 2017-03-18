@@ -1,4 +1,4 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
 trait OrientContext {
   val databaseProtocol: String

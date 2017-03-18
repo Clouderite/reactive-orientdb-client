@@ -1,6 +1,5 @@
-package io.herdes.shared.orient
+package com.devesion.orientdb
 
-import io.herdes.shared.orient.TestUtils.{randomInt, randomIntGtZero}
 import org.scalatest.{FlatSpec, MustMatchers}
 
 class PartitionedDatabasePoolFactoryTest extends FlatSpec with MustMatchers {
