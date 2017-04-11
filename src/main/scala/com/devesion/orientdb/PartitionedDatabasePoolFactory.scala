@@ -5,7 +5,7 @@ import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import scala.collection._
 
 class PartitionedDatabasePoolFactory {
-    private val pools: mutable.Map[OrientContextCase, OPartitionedDatabasePool] = mutable.Map.empty
+  private val pools: mutable.Map[OrientContextCase, OPartitionedDatabasePool] = mutable.Map.empty
 
   def apply(context: OrientContextCase): OPartitionedDatabasePool = {
     synchronized {
@@ -31,5 +31,6 @@ class PartitionedDatabasePoolFactory {
 
 object PartitionedDatabasePoolFactory {
   val poolFactory = new PartitionedDatabasePoolFactory()
+
   def apply(): PartitionedDatabasePoolFactory = poolFactory
 }

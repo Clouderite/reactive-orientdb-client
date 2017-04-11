@@ -21,7 +21,22 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
     }
   }
 
+  def query(where: String): List[T] = {
+    import executor.dbToSqlDatabaseSupport
+    executor.execute {
+      db =>
+         db.queryBySql(s"select from $entityName $where")
+    }
+  }
+
   def save(item: T): T = {
+    val doc: ODocument = findDocumentByIdOptional(item.id).getOrElse(createNewDocument)
+    doc.clear()
+    val mergedDoc = doc.merge(item, true, true)
+    persist(mergedDoc)
+  }
+
+  def merge(item: T): T = {
     val doc: ODocument = findDocumentByIdOptional(item.id).getOrElse(createNewDocument)
     val mergedDoc = doc.merge(item, true, true)
     persist(mergedDoc)

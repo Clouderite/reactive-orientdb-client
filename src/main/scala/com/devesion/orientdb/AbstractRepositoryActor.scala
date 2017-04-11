@@ -13,8 +13,14 @@ private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](re
     case ListItems() =>
       sender ! repository.findAll()
 
+    case QueryItems(where) =>
+      sender ! repository.query(where)
+
     case SaveItem(item) =>
       sender ! repository.save(item.asInstanceOf[T])
+
+    case MergeItem(item) =>
+      sender ! repository.merge(item.asInstanceOf[T])
 
     case DeleteItem(id) =>
       val item = repository.findById(id)

@@ -24,7 +24,20 @@ class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], exe
     }
   }
 
+  def query(where: String): List[T] = {
+    import executor.dbToSqlDatabaseSupport
+    val entityName = oc.entityName
+    executor.execute {
+      db =>
+        db.queryBySql(s"select from $entityName $where").flatMap(entity => db.detach(entity))
+    }
+  }
+
   def save(item: T): T = {
+    throw new NoSuchMethodException()
+  }
+
+  def merge(item: T): T = {
     executor.execute {
       db =>
         db.save(item)
