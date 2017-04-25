@@ -5,13 +5,18 @@ import com.orientechnologies.orient.core.record.impl.ODocument
 
 class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], executor: DocumentStatementExecutor) extends Repository[T] {
   import ec._
+  private val entityName = ec.tn()
 
   def findById(id: String): T = {
-    findByIdOptional(id).getOrElse(throw new ObjectNotFoundException(id))
+    executor.execute {
+      _ ⇒ findByIdOptional(id).getOrElse(throw new ObjectNotFoundException(id))
+    }
   }
 
   def findByIdOptional(id: String): Option[T] = {
-    findDocumentByIdOptional(id)
+    executor.execute {
+      _ ⇒ findDocumentByIdOptional(id)
+    }
   }
 
   def findAll(): List[T] = {

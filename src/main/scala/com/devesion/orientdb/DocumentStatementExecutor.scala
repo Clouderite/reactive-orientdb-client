@@ -43,7 +43,7 @@ class DocumentSqlDatabaseSupport(db: ODatabaseDocumentTx) {
 
   def queryBySqlParams(sql: String)(params: AnyRef*): List[ODocument] = {
     val result: OConcurrentResultSet[ODocument] = db
-      .command(new OSQLSynchQuery[ODocument](sql))
+      .command(new OSQLSynchQuery[ODocument](sql).setFetchPlan("*:-1"))
       .execute(params.asJava.toArray)
       .asInstanceOf[OConcurrentResultSet[ODocument]]
     result.asScala.toList

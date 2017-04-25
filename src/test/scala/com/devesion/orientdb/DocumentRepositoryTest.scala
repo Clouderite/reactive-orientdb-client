@@ -1,6 +1,6 @@
 package com.devesion.orientdb
 
-import com.devesion.orientdb.DocumentContext.{TD, TE}
+import com.devesion.orientdb.DocumentContext.{TD, TE, TN}
 import com.devesion.orientdb.TestUtils.randomInt
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
@@ -33,10 +33,11 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
   private val item = mock[TT]
   private val te = mock[TE[TT]]
   private val td = mock[TD[TT]]
+  private val tn = mock[TN[TT]]
   private val orid = mock[ORID]
 
   when(documentContext.orientContext).thenReturn(orientContext)
-  when(documentContext.entityName).thenReturn(testEntityName)
+  when(documentContext.tn).thenReturn(tn)
   when(documentContext.te).thenReturn(te)
   when(documentContext.td).thenReturn(td)
   when(poolFactory(orientContext)).thenReturn(pool)
@@ -45,6 +46,7 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
 
   when(te.apply(document)).thenReturn(item)
   when(td.apply(item)).thenReturn(document)
+  when(tn.apply()).thenReturn(testEntityName)
   when(document.getIdentity).thenReturn(orid)
   when(item.id).thenReturn(testEntityId)
   when(dbSql.queryBySqlParams(s"select from $testEntityName where id=?")(testEntityId)).thenReturn(List(document))
