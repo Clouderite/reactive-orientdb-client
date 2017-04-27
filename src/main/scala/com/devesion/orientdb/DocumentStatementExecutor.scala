@@ -11,7 +11,7 @@ class DocumentStatementExecutor(context: OrientContext, poolFactory: Partitioned
   private lazy val pool = poolFactory(context)
 
   def execute[A](statement: (ODatabaseDocumentTx) => A): A = {
-    val db = getDb
+    val db = pool.acquire()
     val result = Try(statement(db))
     db.close()
     
@@ -19,10 +19,6 @@ class DocumentStatementExecutor(context: OrientContext, poolFactory: Partitioned
       case Success(value) => value
       case Failure(ex) => throw ex
     }
-  }
-
-  private def getDb[A] = {
-    pool.acquire()
   }
 
   implicit def dbToSqlDatabaseSupport(db: ODatabaseDocumentTx): DocumentSqlDatabaseSupport = new DocumentSqlDatabaseSupport(db)

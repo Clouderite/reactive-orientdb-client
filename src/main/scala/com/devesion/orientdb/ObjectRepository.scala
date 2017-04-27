@@ -1,4 +1,5 @@
 package com.devesion.orientdb
+import com.orientechnologies.orient.core.record.impl.ODocument
 
 class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], executor: ObjectStatementExecutor[T]) extends Repository[T] {
 
@@ -22,6 +23,10 @@ class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], exe
       db =>
         db.queryBySql(s"select from $entityName").flatMap(entity => db.detach(entity))
     }
+  }
+
+  def findDocumentById(id: String): ODocument = {
+    throw new NoSuchMethodException()
   }
 
   def query(where: String): List[T] = {

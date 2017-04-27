@@ -10,6 +10,9 @@ private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](re
     case GetItem(id) =>
       sender ! repository.findById(id)
 
+    case GetDocument(id) =>
+      sender ! repository.findDocumentById(id)
+
     case ListItems() =>
       sender ! repository.findAll()
 

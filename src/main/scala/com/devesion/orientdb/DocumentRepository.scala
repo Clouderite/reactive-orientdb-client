@@ -60,8 +60,15 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
     }
   }
 
+  override def findDocumentById(id: String): ODocument = {
+    executor.execute {
+      _ ⇒ findDocumentByIdOptional(id).getOrElse(throw new ObjectNotFoundException(id))
+    }
+  }
+
   private def findDocumentByIdOptional(id: String): Option[ODocument] = {
     import executor.dbToSqlDatabaseSupport
+    val entityName = ec.tn
     executor.execute {
       db =>
         val list = db.queryBySqlParams(s"select from $entityName where id=?")(id)

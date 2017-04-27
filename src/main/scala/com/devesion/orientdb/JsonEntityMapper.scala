@@ -5,7 +5,7 @@ import spray.json.{JsonFormat, pimpAny, pimpString}
 
 import scala.reflect.runtime.universe._
 
-class SimpleEntityMapper[T : TypeTag] {
+class EntityMapper[T : TypeTag] {
   implicit def entityToName()(implicit tag: TypeTag[T]): String = {
     tag.tpe.typeSymbol.asClass.name.toString
   }
@@ -15,7 +15,7 @@ class SimpleEntityMapper[T : TypeTag] {
   }
 }
 
-class EntityMapper[T : TypeTag : JsonFormat] extends SimpleEntityMapper {
+class JsonEntityMapper[T : TypeTag : JsonFormat] extends EntityMapper {
   implicit def documentToEntity(ret: ODocument): T = {
     ret.toJSON.parseJson.convertTo[T]
   }

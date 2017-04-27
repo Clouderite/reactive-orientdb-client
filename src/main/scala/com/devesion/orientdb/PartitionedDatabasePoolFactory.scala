@@ -18,7 +18,6 @@ class PartitionedDatabasePoolFactory {
   private def newPool(context: OrientContextCase) = {
     val pool = new OPartitionedDatabasePool(connectionString(context), context.databaseLogin, context.databasePassword, context.databasePoolMin, context.databasePoolMax)
     pool.setAutoCreate(true)
-    pool
   }
 
   private[orientdb] def connectionString(implicit context: OrientContextCase) = {

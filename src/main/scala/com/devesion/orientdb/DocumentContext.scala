@@ -7,7 +7,7 @@ import spray.json.JsonFormat
 import scala.reflect.runtime.universe._
 
 abstract class DocumentContext[T: TypeTag] {
-  private def mapper = new SimpleEntityMapper[T]()
+  private def mapper = new EntityMapper[T]()
 
   implicit def te: TE[T]
   implicit def td: TD[T]
@@ -18,7 +18,7 @@ abstract class DocumentContext[T: TypeTag] {
 
 abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
   implicit val jsonFormat: JsonFormat[T]
-  private def mapper = new EntityMapper[T]()
+  private def mapper = new JsonEntityMapper[T]()
 
   implicit def te: TE[T] = mapper.documentToEntity
   implicit def td: TD[T] = mapper.entityToDocument
