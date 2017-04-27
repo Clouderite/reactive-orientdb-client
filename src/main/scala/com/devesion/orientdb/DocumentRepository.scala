@@ -68,7 +68,6 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
 
   private def findDocumentByIdOptional(id: String): Option[ODocument] = {
     import executor.dbToSqlDatabaseSupport
-    val entityName = ec.tn
     executor.execute {
       db =>
         val list = db.queryBySqlParams(s"select from $entityName where id=?")(id)
