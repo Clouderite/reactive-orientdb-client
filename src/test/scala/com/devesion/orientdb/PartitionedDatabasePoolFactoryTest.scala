@@ -7,13 +7,14 @@ class PartitionedDatabasePoolFactoryTest extends FlatSpec with MustMatchers {
   private val testDatabaseProtocol = "remote"
   private val testDatabaseHost = "host"
   private val testDatabaseName = "name"
+  private val testDatabasePort = 1234
   private val testDatabaseLogin = "login"
   private val testDatabasePassword = "password"
   private val testDatabasePoolMin = randomIntGtZero(10)
   private val testDatabasePoolMax = testDatabasePoolMin + randomInt(10)
   private val testEntityPackageName = "entity package name"
 
-  private def orientContext = OrientContextCase(testDatabaseProtocol, testDatabaseHost, testDatabaseName, testDatabaseLogin, testDatabasePassword, testDatabasePoolMin, testDatabasePoolMax, testEntityPackageName)
+  private def orientContext = OrientContextCase(testDatabaseProtocol, testDatabaseHost, testDatabasePort, testDatabaseName, testDatabaseLogin, testDatabasePassword, testDatabasePoolMin, testDatabasePoolMax, testEntityPackageName)
 
   val sut = PartitionedDatabasePoolFactory()
 

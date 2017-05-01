@@ -1,6 +1,8 @@
 package com.devesion.orientdb
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, ActorRef, Status}
+
+import scala.util.{Failure, Success, Try}
 
 private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](repository: Repository[T]) extends Actor with ActorLogging {
   private implicit val system = context.system
@@ -8,26 +10,51 @@ private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](re
 
   override def receive: Receive = {
     case GetItem(id) =>
-      sender ! repository.findById(id)
+      sendResult(sender) {
+        repository.findById(id)
+      }
 
     case GetDocument(id) =>
-      sender ! repository.findDocumentById(id)
+      sendResult(sender) {
+        repository.findDocumentById(id)
+      }
 
     case ListItems() =>
-      sender ! repository.findAll()
+      sendResult(sender) {
+        repository.findAll()
+      }
 
-    case QueryItems(where) =>
-      sender ! repository.query(where)
+    case QueryItems(where, params) =>
+      sendResult(sender) {
+        repository.query(where, params)
+      }
 
     case SaveItem(item) =>
-      sender ! repository.save(item.asInstanceOf[T])
+      sendResult(sender) {
+        repository.save(item.asInstanceOf[T])
+      }
 
     case MergeItem(item) =>
-      sender ! repository.merge(item.asInstanceOf[T])
+      sendResult(sender) {
+        repository.merge(item.asInstanceOf[T])
+      }
 
     case DeleteItem(id) =>
-      val item = repository.findById(id)
-      sender ! repository.delete(item)
+      sendResult(sender) {
+        val item = repository.findById(id)
+        repository.delete(item)
+      }
+  }
+
+  def sendResult(sender: ActorRef)(f: ⇒ Any) {
+    val ret = Try {
+      f
+    } match {
+      case Success(v) ⇒ v
+      case Failure(ex) ⇒ Status.Failure(ex)
+    }
+
+    sender ! ret
   }
 }
 

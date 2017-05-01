@@ -35,12 +35,12 @@ object DocumentStatementExecutor {
 }
 
 class DocumentSqlDatabaseSupport(db: ODatabaseDocumentTx) {
-  def queryBySql(sql: String): List[ODocument] = queryBySqlParams(sql)(Array.empty)
+  def queryBySql(sql: String): List[ODocument] = queryBySqlParams(sql)(Nil)
 
-  def queryBySqlParams(sql: String)(params: AnyRef*): List[ODocument] = {
+  def queryBySqlParams(sql: String)(params: Seq[AnyRef]): List[ODocument] = {
     val result: OConcurrentResultSet[ODocument] = db
       .command(new OSQLSynchQuery[ODocument](sql).setFetchPlan("*:-1"))
-      .execute(params.asJava.toArray)
+      .execute(params.toArray)
       .asInstanceOf[OConcurrentResultSet[ODocument]]
     result.asScala.toList
   }

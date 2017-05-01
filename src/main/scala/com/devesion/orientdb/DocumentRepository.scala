@@ -26,11 +26,11 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
     }
   }
 
-  def query(where: String): List[T] = {
+  def query(where: String, params: Seq[AnyRef]): List[T] = {
     import executor.dbToSqlDatabaseSupport
     executor.execute {
       db =>
-         db.queryBySql(s"select from $entityName $where")
+         db.queryBySqlParams(s"select from $entityName $where")(params)
     }
   }
 
@@ -70,7 +70,7 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
     import executor.dbToSqlDatabaseSupport
     executor.execute {
       db =>
-        val list = db.queryBySqlParams(s"select from $entityName where id=?")(id)
+        val list = db.queryBySqlParams(s"select from $entityName where id=?")(List(id))
         list.headOption
     }
   }

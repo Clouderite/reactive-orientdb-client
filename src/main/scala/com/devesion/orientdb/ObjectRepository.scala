@@ -29,12 +29,12 @@ class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], exe
     throw new NoSuchMethodException()
   }
 
-  def query(where: String): List[T] = {
+  def query(where: String, params: Seq[AnyRef]): List[T] = {
     import executor.dbToSqlDatabaseSupport
     val entityName = oc.entityName
     executor.execute {
       db =>
-        db.queryBySql(s"select from $entityName $where").flatMap(entity => db.detach(entity))
+        db.queryBySqlParams(s"select from $entityName $where")(params).flatMap(entity => db.detach(entity))
     }
   }
 

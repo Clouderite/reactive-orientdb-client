@@ -23,8 +23,9 @@ class PartitionedDatabasePoolFactory {
   private[orientdb] def connectionString(implicit context: OrientContextCase) = {
     val databaseProtocol = context.databaseProtocol
     val databaseHost = context.databaseHost
+    val databasePort = context.databasePort
     val databaseName = context.databaseName
-    s"$databaseProtocol:$databaseHost/$databaseName"
+    s"$databaseProtocol:$databaseHost:$databasePort/$databaseName"
   }
 }
 

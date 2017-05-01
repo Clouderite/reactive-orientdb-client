@@ -49,8 +49,8 @@ class DocumentRepositoryTest extends FlatSpec with MustMatchers with MockitoSuga
   when(tn.apply()).thenReturn(testEntityName)
   when(document.getIdentity).thenReturn(orid)
   when(item.id).thenReturn(testEntityId)
-  when(dbSql.queryBySqlParams(s"select from $testEntityName where id=?")(testEntityId)).thenReturn(List(document))
-  when(dbSql.queryBySqlParams(s"select from $testEntityName where id=?")(testInvalidEntityId)).thenReturn(List())
+  when(dbSql.queryBySqlParams(s"select from $testEntityName where id=?")(List(testEntityId))).thenReturn(List(document))
+  when(dbSql.queryBySqlParams(s"select from $testEntityName where id=?")(List(testInvalidEntityId))).thenReturn(List())
 
   val sut = DocumentRepository(documentContext, executor)
 
