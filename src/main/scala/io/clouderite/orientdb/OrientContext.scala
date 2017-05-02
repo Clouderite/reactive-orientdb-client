@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 trait OrientContext {
   val databaseProtocol: String

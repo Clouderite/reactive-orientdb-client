@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 abstract sealed class RepositoryProtocol
 case class GetItem(id: String) extends RepositoryProtocol

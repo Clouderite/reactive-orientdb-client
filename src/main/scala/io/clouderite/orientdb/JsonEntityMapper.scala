@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 import com.orientechnologies.orient.core.record.impl.ODocument
 import spray.json.{JsonFormat, pimpAny, pimpString}

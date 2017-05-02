@@ -1,4 +1,5 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
+
 import com.orientechnologies.orient.core.record.impl.ODocument
 
 class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], executor: ObjectStatementExecutor[T]) extends Repository[T] {

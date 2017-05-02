@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 trait ObjectContext[T] {
   implicit val entityName: String

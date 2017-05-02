@@ -1,8 +1,8 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
-import com.devesion.orientdb.DocumentContext.{TD, TE, TN}
 import com.orientechnologies.orient.core.db.record.{ORecordLazyList, ORecordLazySet}
 import com.orientechnologies.orient.core.record.impl.ODocument
+import io.clouderite.orientdb.DocumentContext.{TD, TE, TN}
 import spray.json.{JsonFormat, pimpString}
 
 import scala.collection.JavaConverters._

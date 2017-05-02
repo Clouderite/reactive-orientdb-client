@@ -1,11 +1,11 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
-import com.devesion.orientdb.DocumentContext.{TD, TE, TN}
-import com.devesion.orientdb.TestUtils.randomInt
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx
 import com.orientechnologies.orient.core.id.ORID
 import com.orientechnologies.orient.core.record.impl.ODocument
+import io.clouderite.orientdb.DocumentContext.{TD, TE, TN}
+import io.clouderite.orientdb.TestUtils.randomInt
 import org.mockito.Mockito
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.mockito.MockitoSugar

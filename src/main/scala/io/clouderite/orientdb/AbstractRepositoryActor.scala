@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Status}
 

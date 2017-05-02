@@ -1,4 +1,4 @@
-package com.devesion.orientdb
+package io.clouderite.orientdb
 
 class ObjectNotFoundException(id: String) extends RuntimeException {
   override def getMessage: String = {
