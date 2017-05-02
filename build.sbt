@@ -4,7 +4,7 @@ scalaVersion := "2.11.8"
 
 organization := "io.clouderite.orientdb"
 name := "reactive-client"
-version := "1.0.0-" + timestamp()
+version := "1.0.0." + timestamp()
 
 ivyLoggingLevel := UpdateLogging.Full
 publishArtifact := true
