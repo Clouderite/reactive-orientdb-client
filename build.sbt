@@ -1,6 +1,8 @@
+import java.util.{Date, TimeZone}
+
 organization := "io.clouderite.orientdb"
 name := "reactive-client"
-version := "1.0.0"
+version := "1.0.0-" + timestamp()
 
 scalaVersion := "2.11.8"
 
@@ -30,3 +32,9 @@ libraryDependencies ++= {
 fork := true
 mappings in (Compile, packageBin) ++= (mappings in (Compile, packageSrc)).value
 scalacOptions ++= Seq("-Xmax-classfile-name", "110")
+
+def timestamp(): String = {
+  val sdf = new java.text.SimpleDateFormat("yyyyMMddHHmmss")
+  sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
+  sdf.format(new Date(System.currentTimeMillis()))
+}
