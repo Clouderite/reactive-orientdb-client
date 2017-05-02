@@ -1,10 +1,10 @@
 import java.util.{Date, TimeZone}
 
+scalaVersion := "2.11.8"
+
 organization := "io.clouderite.orientdb"
 name := "reactive-client"
 version := "1.0.0-" + timestamp()
-
-scalaVersion := "2.11.8"
 
 ivyLoggingLevel := UpdateLogging.Full
 publishArtifact := true
@@ -13,6 +13,8 @@ publishMavenStyle := true
 pomIncludeRepository := { _ => false }
 publishTo := Some("Sonatype Releases Nexus" at "http://maven.clouderite.io/nexus/content/repositories/releases/")
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
+resolvers += "Sonatype Releases Nexus" at "http://maven.clouderite.io/nexus/content/repositories/releases/"
 
 libraryDependencies ++= {
   val akkaV = "2.5.0"
