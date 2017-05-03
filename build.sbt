@@ -18,10 +18,10 @@ lazy val commonSettings = Seq(
   publishArtifact in Test := false,
   publishMavenStyle := true,
   pomIncludeRepository := { _ => false },
-  publishTo := Some("Sonatype Releases Nexus" at "http://maven.clouderite.io/nexus/content/repositories/releases/"),
+  publishTo := Some("Sonatype Releases Nexus" at "https://maven.clouderite.io/nexus/content/repositories/releases/"),
   credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
 
-  resolvers += "Sonatype Releases Nexus" at "http://maven.clouderite.io/nexus/content/repositories/releases/",
+  resolvers += "Sonatype Releases Nexus" at "https://maven.clouderite.io/nexus/content/repositories/releases/",
 
   libraryDependencies ++= {
     val akkaV = "2.5.0"
