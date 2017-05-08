@@ -1,6 +1,7 @@
 package io.clouderite.orientdb
 
 import com.orientechnologies.orient.core.db.record._
+import com.orientechnologies.orient.core.metadata.schema.OType
 import com.orientechnologies.orient.core.record.ORecord
 import com.orientechnologies.orient.core.record.impl.ODocument
 import io.clouderite.orientdb.DocumentContext.{TD, TE, TN}
@@ -83,7 +84,18 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
           .map(context.td)
           .asJava
 
-      ret.field(field, docs)
+      ret.field(field, docs, OType.LINKLIST)
+    }
+
+    def injectListRead[B <: Entity[String]](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
+      val repository = DocumentRepository(context)
+      val docs =
+        entities
+          .map(_.id)
+          .map(repository.findDocumentById)
+          .asJava
+
+      ret.field(field, docs, OType.LINKLIST)
     }
 
     def optionField[RET](name: String): Option[RET] = {
