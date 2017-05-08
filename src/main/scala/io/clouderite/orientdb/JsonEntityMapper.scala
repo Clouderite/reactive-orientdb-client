@@ -15,7 +15,7 @@ class EntityMapper[T : TypeTag] {
   }
 }
 
-class JsonEntityMapper[T : TypeTag : JsonFormat] extends EntityMapper {
+class JsonEntityMapper[T : TypeTag : JsonFormat] extends EntityMapper[T] {
   implicit def documentToEntity(ret: ODocument): T = {
     ret.toJSON.parseJson.convertTo[T]
   }
