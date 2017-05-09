@@ -24,6 +24,11 @@ private[orientdb] abstract class AbstractRepositoryActor[T <: Entity[String]](re
         repository.findAll()
       }
 
+    case QueryItem(where, params) =>
+      sendResult(sender) {
+        repository.query(where, params).headOption.getOrElse(throw new QueriedObjectNotFoundException(where, params))
+      }
+
     case QueryItems(where, params) =>
       sendResult(sender) {
         repository.query(where, params)

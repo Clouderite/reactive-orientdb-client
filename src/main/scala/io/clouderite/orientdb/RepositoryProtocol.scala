@@ -2,6 +2,7 @@ package io.clouderite.orientdb
 
 abstract sealed class RepositoryProtocol
 case class GetItem(id: String) extends RepositoryProtocol
+case class QueryItem(where: String, params: Seq[AnyRef]) extends RepositoryProtocol
 case class GetDocument(id: String) extends RepositoryProtocol
 case class ListItems() extends RepositoryProtocol
 case class QueryItems(where: String, params: Seq[AnyRef]) extends RepositoryProtocol
