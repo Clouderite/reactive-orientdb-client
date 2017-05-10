@@ -29,9 +29,9 @@ lazy val commonSettings = Seq(
     Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "com.typesafe.akka" %% "akka-actor" % akkaV,
-      "com.orientechnologies" % "orientdb-core" % "2.2.14",
-      "com.orientechnologies" % "orientdb-object" % "2.2.14",
-      "com.orientechnologies" % "orientdb-client" % "2.2.14",
+      "com.orientechnologies" % "orientdb-core" % "2.2.19",
+      "com.orientechnologies" % "orientdb-object" % "2.2.19",
+      "com.orientechnologies" % "orientdb-client" % "2.2.19",
       "com.typesafe.akka" % "akka-http-spray-json-experimental_2.11" % "2.4.11",
       "org.scalatest" %% "scalatest" % "3.0.1" % "test",
       "org.mockito" % "mockito-core" % "1.10.19"
