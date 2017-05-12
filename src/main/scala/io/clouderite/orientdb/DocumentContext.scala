@@ -1,7 +1,7 @@
 package io.clouderite.orientdb
 
-import com.orientechnologies.orient.core.db.record._
-import com.orientechnologies.orient.core.metadata.schema.OType
+import java.util
+
 import com.orientechnologies.orient.core.record.ORecord
 import com.orientechnologies.orient.core.record.impl.ODocument
 import io.clouderite.orientdb.DocumentContext.{TD, TE, TN}
@@ -31,7 +31,7 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
 
   class DocumentOperations(ret: ODocument) {
     def extractList[B : JsonFormat](field: String): List[B] = {
-      val optionFieldDocs: Option[OTrackedList[ORecord]] = ret.optionField(field)
+      val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
 
       optionFieldDocs.map { fieldDocs ⇒
         ret.field(field, Nil.asJava)
@@ -47,29 +47,29 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def extractSet[B : JsonFormat](field: String): Set[B] = {
-      val optionFieldDocs: Option[OTrackedSet[ORecord]] = ret.optionField(field)
+    def extractListAsSet[B : JsonFormat](field: String): Set[B] = {
+      extractList[B](field).toSet
+    }
+
+    def extractListSimple[B](field: String): List[B] = {
+      val optionFieldDocs: Option[util.List[B]] = ret.optionField(field)
 
       optionFieldDocs.map { fieldDocs ⇒
         ret.field(field, Nil.asJava)
-        
-        val values = for {
-          block ← fieldDocs.asScala
-          rec = block.getRecord[ODocument]
-          j = rec.toJSON
-          p = j.parseJson
-          o = p.convertTo[B]
-        } yield o
-        Set.empty[B] ++ values
-      }.getOrElse(Set.empty)
+        fieldDocs.asScala.toList
+      }.getOrElse(List.empty)
+    }
+
+    def extractListAsSetSimple[B](field: String): Set[B] = {
+      extractListSimple[B](field).toSet
     }
 
     def extractListNested[B](field: String)(implicit context: DocumentContext[B]): List[B] = {
-      val optionFieldDocs: Option[OTrackedList[ORecord]] = ret.optionField(field)
+      val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
 
       optionFieldDocs.map { fieldDocs ⇒
         ret.field(field, Nil.asJava)
-        
+
         for {
           block ← fieldDocs.asScala.toList
           rec = block.getRecord[ODocument]
@@ -78,13 +78,25 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
+    def injectListSimple[B](field: String, entities: List[B]): Unit = {
+      val docs = entities.asJava
+
+      ret.field(field, docs)
+    }
+
+    def injectSetAsListSimple[B](field: String, entities: Set[B]): Unit = {
+      val docs = entities.toList.asJava
+
+      ret.field(field, docs)
+    }
+
     def injectListNested[B](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
       val docs =
         entities
           .map(context.td)
           .asJava
 
-      ret.field(field, docs, OType.LINKLIST)
+      ret.field(field, docs)
     }
 
     def injectListRead[B <: Entity[String]](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
@@ -95,7 +107,7 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
           .map(repository.findDocumentById)
           .asJava
 
-      ret.field(field, docs, OType.LINKLIST)
+      ret.field(field, docs)
     }
 
     def optionField[RET](name: String): Option[RET] = {
