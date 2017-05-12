@@ -66,7 +66,7 @@ class DocumentRepository[T <: Entity[String]](implicit ec: DocumentContext[T], e
     }
   }
 
-  private def findDocumentByIdOptional(id: String): Option[ODocument] = {
+  override def findDocumentByIdOptional(id: String): Option[ODocument] = {
     import executor.dbToSqlDatabaseSupport
     executor.execute {
       db =>

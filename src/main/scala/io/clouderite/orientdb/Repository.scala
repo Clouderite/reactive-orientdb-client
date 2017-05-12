@@ -7,6 +7,7 @@ trait Repository[T <: Entity[String]] {
   def findByIdOptional(id: String): Option[T]
   def findAll(): List[T]
   def findDocumentById(id: String): ODocument
+  def findDocumentByIdOptional(id: String): Option[ODocument]
   def query(where: String, params: Seq[AnyRef]): List[T]
   def save(item: T): T
   def merge(item: T): T

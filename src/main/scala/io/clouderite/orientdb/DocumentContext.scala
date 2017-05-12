@@ -103,8 +103,7 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       val repository = DocumentRepository(context)
       val docs =
         entities
-          .map(_.id)
-          .map(repository.findDocumentById)
+          .map(entity ⇒ repository.findDocumentByIdOptional(entity.id).getOrElse(context.td(entity)))
           .asJava
 
       ret.field(field, docs)

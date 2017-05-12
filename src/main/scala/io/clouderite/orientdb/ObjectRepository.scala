@@ -30,6 +30,10 @@ class ObjectRepository[T <: Entity[String]]()(implicit oc: ObjectContext[T], exe
     throw new NoSuchMethodException()
   }
 
+  def findDocumentByIdOptional(id: String): Option[ODocument] = {
+    throw new NoSuchMethodException()
+  }
+
   def query(where: String, params: Seq[AnyRef]): List[T] = {
     import executor.dbToSqlDatabaseSupport
     val entityName = oc.entityName
