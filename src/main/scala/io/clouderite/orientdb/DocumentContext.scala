@@ -30,7 +30,11 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
   implicit def documentToDocumentOperations(doc: ODocument): DocumentOperations = new DocumentOperations(doc)
 
   class DocumentOperations(ret: ODocument) {
-    def extractList[B : JsonFormat](field: String): List[B] = {
+    def extractListWithJsonAsSet[B : JsonFormat](field: String): Set[B] = {
+      extractListWithJson[B](field).toSet
+    }
+
+    def extractListWithJson[B : JsonFormat](field: String): List[B] = {
       val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
 
       optionFieldDocs.map { fieldDocs ⇒
@@ -47,8 +51,8 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def extractListAsSet[B : JsonFormat](field: String): Set[B] = {
-      extractList[B](field).toSet
+    def extractListAsSetSimple[B](field: String): Set[B] = {
+      extractListSimple(field).toSet
     }
 
     def extractListSimple[B](field: String): List[B] = {
@@ -60,11 +64,11 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def extractListAsSetSimple[B](field: String): Set[B] = {
-      extractListSimple[B](field).toSet
+    def extractListAsSetWithContext[B](field: String)(implicit context: DocumentContext[B]): Set[B] = {
+      extractListWithContext(field).toSet
     }
 
-    def extractListNested[B](field: String)(implicit context: DocumentContext[B]): List[B] = {
+    def extractListWithContext[B](field: String)(implicit context: DocumentContext[B]): List[B] = {
       val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
 
       optionFieldDocs.map { fieldDocs ⇒
@@ -78,19 +82,20 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
+    def injectSetAsListSimple[B](field: String, entities: Set[B]): Unit = {
+      injectListSimple(field, entities.toList)
+    }
+
     def injectListSimple[B](field: String, entities: List[B]): Unit = {
       val docs = entities.asJava
-
       ret.field(field, docs)
     }
 
-    def injectSetAsListSimple[B](field: String, entities: Set[B]): Unit = {
-      val docs = entities.toList.asJava
-
-      ret.field(field, docs)
+    def injectSetAsListWithContext[B](field: String, entities: Set[B])(implicit context: DocumentContext[B]): Unit = {
+      injectListWithContext(field, entities.toList)
     }
 
-    def injectListNested[B](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
+    def injectListWithContext[B](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
       val docs =
         entities
           .map(context.td)
@@ -99,7 +104,7 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       ret.field(field, docs)
     }
 
-    def injectListRead[B <: Entity[String]](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
+    def injectListWithRead[B <: Entity[String]](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
       val repository = DocumentRepository(context)
       val docs =
         entities
