@@ -5,7 +5,7 @@ import java.util
 import com.orientechnologies.orient.core.record.ORecord
 import com.orientechnologies.orient.core.record.impl.ODocument
 import io.clouderite.orientdb.DocumentContext.{TD, TE, TN}
-import spray.json.{JsonFormat, pimpString}
+import spray.json.{JsonFormat, pimpAny, pimpString}
 
 import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe._
@@ -30,9 +30,8 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
   implicit def documentToDocumentOperations(doc: ODocument): DocumentOperations = new DocumentOperations(doc)
 
   class DocumentOperations(ret: ODocument) {
-    def extractListWithJsonAsSet[B : JsonFormat](field: String): Set[B] = {
+    def extractListAsSetWithJson[B : JsonFormat](field: String): Set[B] =
       extractListWithJson[B](field).toSet
-    }
 
     def extractListWithJson[B : JsonFormat](field: String): List[B] = {
       val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
@@ -51,9 +50,8 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def extractListAsSetSimple[B](field: String): Set[B] = {
+    def extractListAsSetSimple[B](field: String): Set[B] =
       extractListSimple(field).toSet
-    }
 
     def extractListSimple[B](field: String): List[B] = {
       val optionFieldDocs: Option[util.List[B]] = ret.optionField(field)
@@ -64,9 +62,8 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def extractListAsSetWithContext[B](field: String)(implicit context: DocumentContext[B]): Set[B] = {
+    def extractListAsSetWithContext[B](field: String)(implicit context: DocumentContext[B]): Set[B] =
       extractListWithContext(field).toSet
-    }
 
     def extractListWithContext[B](field: String)(implicit context: DocumentContext[B]): List[B] = {
       val optionFieldDocs: Option[util.List[ORecord]] = ret.optionField(field)
@@ -82,18 +79,16 @@ abstract class JsonDocumentContext[T : TypeTag] extends DocumentContext[T] {
       }.getOrElse(List.empty)
     }
 
-    def injectSetAsListSimple[B](field: String, entities: Set[B]): Unit = {
+    def injectSetAsListSimple[B](field: String, entities: Set[B]): Unit =
       injectListSimple(field, entities.toList)
-    }
 
     def injectListSimple[B](field: String, entities: List[B]): Unit = {
       val docs = entities.asJava
       ret.field(field, docs)
     }
 
-    def injectSetAsListWithContext[B](field: String, entities: Set[B])(implicit context: DocumentContext[B]): Unit = {
+    def injectSetAsListWithContext[B](field: String, entities: Set[B])(implicit context: DocumentContext[B]): Unit =
       injectListWithContext(field, entities.toList)
-    }
 
     def injectListWithContext[B](field: String, entities: List[B])(implicit context: DocumentContext[B]): Unit = {
       val docs =
